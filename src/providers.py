@@ -6,6 +6,7 @@ Hỗ trợ Native Tool Calling và chuyển đổi linh hoạt qua biến môi t
 import os
 import sys
 import json
+import re
 from typing import Dict, Any, List
 from dotenv import load_dotenv
 
@@ -34,23 +35,67 @@ class MockOfflineProvider(BaseLLMProvider):
     def generate(self, prompt: str, system_prompt: str = "") -> str:
         return f"[Mock Chatbot Response]: Xin chào! Tôi đã nhận được câu hỏi '{prompt}'. (Chế độ Chatbot không có Tool tra cứu dữ liệu thời gian thực)."
 
+    def _summarize_observation(self, prompt: str) -> str:
+        marker = "Observation từ MCP Server:"
+        observation_text = prompt.split(marker, 1)[1].strip()
+        observation_text = observation_text.split("\n\n", 1)[0].strip()
+
+        try:
+            obs_data = json.loads(observation_text)
+        except json.JSONDecodeError:
+            return f"[Mock Agent Response]: Đã nhận Observation từ MCP Server: {observation_text}"
+
+        if not obs_data:
+            return "Chưa thể trả lời chi tiết do chưa nhận được dữ liệu từ MCP Server (hãy hoàn thành TODO 2.1)."
+        if obs_data.get("status") == "SUCCESS":
+            if "data" in obs_data:
+                d = obs_data["data"]
+                return (
+                    f"Kết quả tra cứu cho sinh viên {obs_data.get('student_id', '')} ({d.get('full_name', '')}): "
+                    f"Lớp {d.get('class', '')}, GPA: {d.get('gpa', '')}, Email: {d.get('email', '')}, "
+                    f"Trạng thái: {d.get('status', '')}, Cố vấn: {d.get('advisor', '')}."
+                )
+            if "message" in obs_data:
+                return obs_data["message"]
+            return f"Đã hoàn tất xử lý qua MCP Server: {json.dumps(obs_data, ensure_ascii=False)}"
+        if obs_data.get("status") == "NOT_FOUND":
+            return obs_data.get("message", "Không tìm thấy thông tin sinh viên yêu cầu.")
+        return f"Phản hồi từ công cụ: {json.dumps(obs_data, ensure_ascii=False)}"
+
     def generate_with_tools(self, prompt: str, tools_schema: List[Dict[str, Any]], system_prompt: str = "") -> Dict[str, Any]:
         prompt_lower = prompt.lower()
+
+        if "observation từ mcp server:" in prompt_lower:
+            return {
+                "type": "text",
+                "content": self._summarize_observation(prompt),
+                "thought": "Đã nhận Observation từ MCP Server. Tôi sẽ tổng hợp dữ liệu thành câu trả lời cuối cùng."
+            }
+
+        student_match = re.search(r"\bSV\d+\b", prompt, re.IGNORECASE)
+        student_id = student_match.group(0).upper() if student_match else "SV2026001"
+        wants_appointment = any(keyword in prompt_lower for keyword in ["đặt lịch", "đặt schedule", "appointment", "appoinment"])
+        wants_lookup = any(keyword in prompt_lower for keyword in ["tra cứu", "kiểm tra", "hồ sơ", "thông tin học vụ"])
         
         # Mô phỏng nhận diện intent gọi Tool
-        if "sv2026001" in prompt_lower and "đặt lịch" in prompt_lower:
+        if wants_appointment and ("kiểm tra cố vấn" not in prompt_lower and "cố vấn của tôi" not in prompt_lower):
+            date_match = re.search(r"\b\d{1,2}/\d{1,2}/\d{4}\b", prompt)
+            hour_match = re.search(r"\b(\d{1,2})(?=\s*(?:giờ|h|:))", prompt_lower)
+            date_part = date_match.group(0) if date_match else "15/09/2026"
+            hour_part = hour_match.group(1).zfill(2) if hour_match else "14"
+            advisor_name = "giáo sư A" if "giáo sư a" in prompt_lower else "PGS.TS Nguyễn Văn A"
             return {
                 "type": "tool_call",
                 "tool_name": "schedule_appointment",
-                "arguments": {"student_id": "SV2026001", "datetime_str": "14:00 15/09/2026", "advisor_name": "PGS.TS Nguyễn Văn A"},
-                "thought": "Người dùng yêu cầu đặt lịch hẹn tư vấn cho sinh viên SV2026001. Tôi sẽ gọi tool schedule_appointment."
+                "arguments": {"student_id": student_id, "datetime_str": f"{hour_part}:00 {date_part}", "advisor_name": advisor_name},
+                "thought": f"Người dùng yêu cầu đặt lịch hẹn tư vấn cho sinh viên {student_id}. Tôi sẽ gọi tool schedule_appointment."
             }
-        elif "sv2026001" in prompt_lower or "tra cứu" in prompt_lower:
+        elif student_match and (wants_lookup or wants_appointment):
             return {
                 "type": "tool_call",
                 "tool_name": "academic_query",
-                "arguments": {"student_id": "SV2026001"},
-                "thought": "Người dùng muốn tra cứu thông tin học vụ của sinh viên SV2026001. Tôi sẽ gọi tool academic_query."
+                "arguments": {"student_id": student_id},
+                "thought": f"Người dùng muốn tra cứu thông tin học vụ của sinh viên {student_id}. Tôi sẽ gọi tool academic_query."
             }
         else:
             return {

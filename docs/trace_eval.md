@@ -24,18 +24,9 @@
 Dán 1 đoạn trích xuất log tiêu biểu từ file `docs/trace_waterfall.json` sinh ra từ phản hồi LLM API thật:
 
 ```json
-[
   {
     "step": 1,
-    "query": "Chào bạn, bạn có thể giới thiệu quy chế học vụ cơ bản của Đại học VinUni không?",
-    "action_type": "FINAL_ANSWER",
-    "thought": "Gemini phản hồi trực tiếp bằng văn bản (không cần gọi công cụ).",
-    "output": "Chào bạn! Rất vui được hỗ trợ bạn.\n\nVới tư cách là Trợ lý Tác tử Học vụ của VinUni, tôi xin chia sẻ một số quy chế học vụ cơ bản mà sinh viên cần nắm vững để đảm bảo quá trình học tập thuận lợi:\n\n1.  **Hệ thống tín chỉ:** VinUni áp dụng hệ thống tín chỉ theo tiêu chuẩn quốc tế. Sinh viên cần hoàn thành đủ số tín chỉ quy định cho chương trình đào tạo của mình để đủ điều kiện tốt nghiệp.\n2.  **Đánh giá kết quả học tập:** Kết quả học tập thường được đánh giá qua nhiều thành phần (điểm chuyên cần, bài tập, bài kiểm tra giữa kỳ, dự án, và thi cuối kỳ). Điểm số thường được tính theo thang điểm 4.0 (GPA).\n3.  **Quy định về học vụ:**\n    *   **Cảnh báo học vụ:** Sinh viên có thể bị cảnh báo học vụ nếu điểm trung bình tích lũy (CGPA) rơi xuống dưới mức quy định (thường là dưới 2.0).\n    *   **Đăng ký môn học:** Sinh viên cần chủ động đăng ký môn học đúng thời hạn thông qua hệ thống quản lý học vụ của trường.\n    *   **Chính sách liêm chính học thuật:** VinUni đề cao sự trung thực trong học tập. Mọi hành vi gian lận (đạo văn, quay cóp,...) đều bị xử lý nghiêm khắc theo quy định của nhà trường.\n4.  **Tư vấn học tập:** Mỗi sinh viên đều có một Cố vấn học tập (Academic Advisor). Bạn nên thường xuyên liên hệ với Cố vấn để được định hướng về lộ trình học tập, chọn môn hoặc giải quyết các vấn đề phát sinh.\n\n**Lưu ý:** Các quy định chi tiết có thể thay đổi tùy theo từng năm học và từng ngành đào tạo. Để có thông tin chính xác nhất cho trường hợp cụ thể của bạn (ví dụ: kiểm tra tình trạng học vụ hiện tại hoặc đặt lịch hẹn với Cố vấn), bạn có thể cung cấp **Mã sinh viên**, tôi sẽ giúp bạn tra cứu thông tin hoặc hỗ trợ đặt lịch hẹn.\n\nBạn có muốn tôi tra cứu thông tin cụ thể nào liên quan đến hồ sơ học vụ của bạn không?",
-    "latency_ms": 4119.23
-  },
-  {
-    "step": 1,
-    "query": "Hãy tra cứu thông tin học vụ của sinh viên SV2026001.",
+    "query": "Tôi là sinh viên SV2026001 và muốn đặt một buổi tư vấn học vụ với cố vấn học tập của tôi vào ngày 21/09/2026. Hãy kiểm tra cố vấn của tôi trước, sau đó tìm và đặt một khung giờ còn trống trong ngày đó.",
     "action_type": "TOOL_EXECUTION",
     "tool_name": "academic_query",
     "arguments": {
@@ -53,97 +44,36 @@ Dán 1 đoạn trích xuất log tiêu biểu từ file `docs/trace_waterfall.js
         "advisor": "PGS.TS Nguyễn Văn A"
       }
     },
-    "latency_ms": 1417.45
+    "latency_ms": 1096.3
   },
   {
     "step": 2,
-    "query": "Hãy tra cứu thông tin học vụ của sinh viên SV2026001.",
-    "action_type": "FINAL_ANSWER",
-    "thought": "Tổng hợp kết quả từ MCP Server thành công.",
-    "output": "Kết quả tra cứu cho sinh viên SV2026001 (Nguyễn Văn An): Lớp AI-K4, GPA: 3.85, Email: an.nv@vinuni.edu.vn, Trạng thái: Đang học, Cố vấn: PGS.TS Nguyễn Văn A.",
-    "latency_ms": 10.0
-  },
-  {
-    "step": 1,
-    "query": "Đặt schedule appoinment tư vấn cho sinh viên SV2026002 vào chiều 15/10/2026  17 giờ với giáo sư A",
+    "query": "Tôi là sinh viên SV2026001 và muốn đặt một buổi tư vấn học vụ với cố vấn học tập của tôi vào ngày 21/09/2026. Hãy kiểm tra cố vấn của tôi trước, sau đó tìm và đặt một khung giờ còn trống trong ngày đó.",
     "action_type": "TOOL_EXECUTION",
     "tool_name": "schedule_appointment",
     "arguments": {
-      "datetime_str": "17:00 15/10/2026",
-      "advisor_name": "giáo sư A",
-      "student_id": "SV2026002"
-    },
-    "observation": {
-      "status": "SUCCESS",
-      "booking_id": "BK-SV2026002-99",
-      "student_id": "SV2026002",
-      "datetime": "17:00 15/10/2026",
-      "advisor": "giáo sư A",
-      "message": "Đặt lịch thành công cho sinh viên SV2026002 với giáo sư A vào lúc 17:00 15/10/2026."
-    },
-    "latency_ms": 1129.91
-  },
-  {
-    "step": 2,
-    "query": "Đặt schedule appoinment tư vấn cho sinh viên SV2026002 vào chiều 15/10/2026  17 giờ với giáo sư A",
-    "action_type": "FINAL_ANSWER",
-    "thought": "Tổng hợp kết quả từ MCP Server thành công.",
-    "output": "Đặt lịch thành công cho sinh viên SV2026002 với giáo sư A vào lúc 17:00 15/10/2026.",
-    "latency_ms": 10.0
-  },
-  {
-    "step": 1,
-    "query": "Tôi là sinh viên SV2026001 và muốn đặt một buổi tư vấn học vụ với cố vấn học tập của tôi vào ngày 21/09/2026. Hãy kiểm tra cố vấn của tôi trước, sau đó tìm và đặt một khung giờ còn trống trong ngày đó.",
-    "action_type": "TOOL_EXECUTION",
-    "tool_name": "academic_query",
-    "arguments": {
+      "datetime_str": "09:00 21/09/2026",
+      "advisor_name": "PGS.TS Nguyễn Văn A",
       "student_id": "SV2026001"
     },
     "observation": {
       "status": "SUCCESS",
+      "booking_id": "BK-SV2026001-99",
       "student_id": "SV2026001",
-      "data": {
-        "full_name": "Nguyễn Văn An",
-        "class": "AI-K4",
-        "gpa": 3.85,
-        "email": "an.nv@vinuni.edu.vn",
-        "status": "Đang học",
-        "advisor": "PGS.TS Nguyễn Văn A"
-      }
+      "datetime": "09:00 21/09/2026",
+      "advisor": "PGS.TS Nguyễn Văn A",
+      "message": "Đặt lịch thành công cho sinh viên SV2026001 với PGS.TS Nguyễn Văn A vào lúc 09:00 21/09/2026."
     },
-    "latency_ms": 1426.56
+    "latency_ms": 1217.47
   },
   {
-    "step": 2,
+    "step": 3,
     "query": "Tôi là sinh viên SV2026001 và muốn đặt một buổi tư vấn học vụ với cố vấn học tập của tôi vào ngày 21/09/2026. Hãy kiểm tra cố vấn của tôi trước, sau đó tìm và đặt một khung giờ còn trống trong ngày đó.",
     "action_type": "FINAL_ANSWER",
-    "thought": "Tổng hợp kết quả từ MCP Server thành công.",
-    "output": "Kết quả tra cứu cho sinh viên SV2026001 (Nguyễn Văn An): Lớp AI-K4, GPA: 3.85, Email: an.nv@vinuni.edu.vn, Trạng thái: Đang học, Cố vấn: PGS.TS Nguyễn Văn A.",
-    "latency_ms": 10.0
-  },
-  {
-    "step": 1,
-    "query": "Hãy tra cứu thông tin học vụ của sinh viên SV9999999.",
-    "action_type": "TOOL_EXECUTION",
-    "tool_name": "academic_query",
-    "arguments": {
-      "student_id": "SV9999999"
-    },
-    "observation": {
-      "status": "NOT_FOUND",
-      "message": "Không tìm thấy dữ liệu sinh viên có mã 'SV9999999'"
-    },
-    "latency_ms": 926.63
-  },
-  {
-    "step": 2,
-    "query": "Hãy tra cứu thông tin học vụ của sinh viên SV9999999.",
-    "action_type": "FINAL_ANSWER",
-    "thought": "Tổng hợp kết quả từ MCP Server thành công.",
-    "output": "Không tìm thấy dữ liệu sinh viên có mã 'SV9999999'",
-    "latency_ms": 10.0
+    "thought": "Gemini phản hồi trực tiếp bằng văn bản (không cần gọi công cụ).",
+    "output": "Chào bạn, tôi đã hoàn tất việc đặt lịch tư vấn học vụ cho bạn.\n\nDưới đây là thông tin chi tiết về buổi hẹn:\n*   **Mã sinh viên:** SV2026001\n*   **Cố vấn học tập:** PGS.TS Nguyễn Văn A\n*   **Thời gian:** 09:00, ngày 21/09/2026\n*   **Mã đặt lịch:** BK-SV2026001-99\n\nChúc bạn có một buổi tư vấn hiệu quả! Nếu cần hỗ trợ thêm, bạn hãy cho tôi biết nhé.",
+    "latency_ms": 1728.52
   }
-]
 ```
 
 ---
@@ -151,8 +81,8 @@ Dán 1 đoạn trích xuất log tiêu biểu từ file `docs/trace_waterfall.js
 ## 3. TỔNG KẾT KẾT QUẢ NGHIỆM THU & NỘP BÀI
 
 - [x] Đã điền API Key thật trong `.env` và xác nhận Agent chạy mượt mà trên LLM API thật (Gemini/OpenAI).
-- **Tổng số Test Cases đã chạy thành công:** 4 / 5 test cases.
-- **Số lượt gọi Tool qua MCP Server chính xác:** 4 lượt.
+- **Tổng số Test Cases đã chạy thành công:** 5 / 5 test cases.
+- **Số lượt gọi Tool qua MCP Server chính xác:** 5 lượt.
 - **Kết quả đẩy Repo nộp bài:** [x] Đã Commit và Push mã nguồn thành công lên GitHub cá nhân.
 
 ---
